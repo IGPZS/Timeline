@@ -1,0 +1,46 @@
+name: Download Timeline Images
+on:
+  workflow_dispatch:
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download images from Wikimedia
+        run: |
+          mkdir -p assets/images
+          UA="Mozilla/5.0 (compatible; WikimediaBot/1.0)"
+          download() { curl -L -A "$UA" -o "assets/images/$1" "$2" || echo "FAILED: $1"; }
+          download homer.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Homer_bust_louvre_front.JPG/400px-Homer_bust_louvre_front.JPG"
+          download draco.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Republication_of_Draco_Law_on_homicide_-_408-409_BC.jpg/400px-Republication_of_Draco_Law_on_homicide_-_408-409_BC.jpg"
+          download cleisthenes.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Cleisthenes_Statue_Aigaleo.jpg/400px-Cleisthenes_Statue_Aigaleo.jpg"
+          download peloponnesian.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Peloponnesian_war_alliances_431_BC.png/400px-Peloponnesian_war_alliances_431_BC.png"
+          download macedonia.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Map_Macedonia_336_BC-en.svg/400px-Map_Macedonia_336_BC-en.svg.png"
+          download twelve-tables.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Twelve_Tables.jpg/400px-Twelve_Tables.jpg"
+          download gracchi.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Gaius_Gracchus_flieht_auf_dem_pons_sublicius_%C3%BCber_den_Tiber.jpg/400px-Gaius_Gracchus_flieht_auf_dem_pons_sublicius_%C3%BCber_den_Tiber.jpg"
+          download sulla.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Bust_of_Sulla_%28Ny_Carlsberg_Glyptotek%2C_Copenhagen%29_1.jpg/400px-Bust_of_Sulla_%28Ny_Carlsberg_Glyptotek%2C_Copenhagen%29_1.jpg"
+          download caesar.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Assassination_of_Julius_Caesar_MET_87.12.171.jpg/400px-Assassination_of_Julius_Caesar_MET_87.12.171.jpg"
+          download julio-claudian.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Julio-Claudian-Dynasty.jpg/400px-Julio-Claudian-Dynasty.jpg"
+          download flavian.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/Colosseum_-_Rome_-_Italy_%2816800139540%29.jpg/400px-Colosseum_-_Rome_-_Italy_%2816800139540%29.jpg"
+          download trajan.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Trajan%27s_Column_Rilievo_Museo_della_Civilt%C3%A0_Romana.jpg/400px-Trajan%27s_Column_Rilievo_Museo_della_Civilt%C3%A0_Romana.jpg"
+          download severan.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Severan_dynasty_-_tondo.png/400px-Severan_dynasty_-_tondo.png"
+          download gallic-empire.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Gallic_Empire_260-274.svg/400px-Gallic_Empire_260-274.svg.png"
+          download palmyra.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Palmyra%2C_Syria_-_3.jpg/400px-Palmyra%2C_Syria_-_3.jpg"
+          download aurelian.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Aurelian_bust_Uffizi.jpg/400px-Aurelian_bust_Uffizi.jpg"
+          download milvian-bridge.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Constantine_the_Great_at_the_Milvian_Bridge.jpg/400px-Constantine_the_Great_at_the_Milvian_Bridge.jpg"
+          download constantinople.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Aivazovsky_-_View_of_Constantinople_and_the_Bosphorus.jpg/400px-Aivazovsky_-_View_of_Constantinople_and_the_Bosphorus.jpg"
+          download adrianople.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Battle_of_Adrianople_378_en.svg/400px-Battle_of_Adrianople_378_en.svg.png"
+          download codex-theodosianus.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/St._Gallen%2C_Ms_Cod._Sang._731_fol_1r_Title_page_for_Codex_Theodosianus_in_the_Breviary_of_Alaric.jpg/400px-St._Gallen%2C_Ms_Cod._Sang._731_fol_1r_Title_page_for_Codex_Theodosianus_in_the_Breviary_of_Alaric.jpg"
+          download stilicho.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Stilicho.jpg/400px-Stilicho.jpg"
+          download iconoclasm.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Triumph_orthodoxy.jpg/400px-Triumph_orthodoxy.jpg"
+          download ecloga.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/BnF_Ms_Gr510_folio_440_recto_-_detail_-_Constantine%27s_Vision_and_the_Battle_of_the_Milvian_Bridge.jpg/400px-BnF_Ms_Gr510_folio_440_recto_-_detail_-_Constantine%27s_Vision_and_the_Battle_of_the_Milvian_Bridge.jpg"
+          download basilika.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Byzantine_Empire_Themes_1025-en.svg/400px-Byzantine_Empire_Themes_1025-en.svg.png"
+          download macedonian.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Byzantine_Empire%2C_Basil_II_%22Boulgaroktonos%22_period%28AD1025%29.jpg/400px-Byzantine_Empire%2C_Basil_II_%22Boulgaroktonos%22_period%28AD1025%29.jpg"
+          ls -la assets/images/
+      - name: Commit images
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add assets/images/
+          git diff --cached --quiet || git commit -m "Add 25 timeline images from Wikimedia"
+          git push
