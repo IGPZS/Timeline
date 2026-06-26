@@ -8,7 +8,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download images from Wikimedia
         run: |
-          mkdir -p assets/images
+          mkdir -p assets/images || true
           UA="Mozilla/5.0 (compatible; WikimediaBot/1.0)"
           download() { curl -L -A "$UA" -o "assets/images/$1" "$2" || echo "FAILED: $1"; }
           download homer.jpg "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Homer_bust_louvre_front.JPG/400px-Homer_bust_louvre_front.JPG"
