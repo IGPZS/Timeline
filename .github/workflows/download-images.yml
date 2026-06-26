@@ -23,62 +23,72 @@ jobs:
           session = requests.Session()
           session.headers["User-Agent"] = "TimelineBot/1.0 (https://github.com/IGPZS/Timeline)"
 
-          # Originals only — thumbnails are blocked on GitHub Actions IPs
           FILES = {
-              "homer.jpg":            "https://upload.wikimedia.org/wikipedia/commons/b/b3/Homer_bust_louvre_front.JPG",
-              "draco.jpg":            "https://upload.wikimedia.org/wikipedia/commons/1/14/Republication_of_Draco_Law_on_homicide_-_408-409_BC.jpg",
-              "cleisthenes.jpg":      "https://upload.wikimedia.org/wikipedia/commons/3/36/Cleisthenes.jpg",
-              "peloponnesian.jpg":    "https://upload.wikimedia.org/wikipedia/commons/e/e8/Before_Peloponnesian_War.png",
-              "macedonia.jpg":        "https://upload.wikimedia.org/wikipedia/commons/3/31/Alexander_the_Great_Empire_map_en.svg",
-              "twelve-tables.jpg":    "https://upload.wikimedia.org/wikipedia/commons/a/ab/Twelve_Tables_Engraving.jpg",
-              "gracchi.jpg":          "https://upload.wikimedia.org/wikipedia/commons/8/87/Eugene_Guillaume_-_the_Gracchi.jpg",
-              "sulla.jpg":            "https://upload.wikimedia.org/wikipedia/commons/9/99/Sulla_Glyptothek_Munich_309.jpg",
-              "caesar.jpg":           "https://upload.wikimedia.org/wikipedia/commons/9/96/Bust_of_Julius_Caesar.jpg",
-              "julio-claudian.jpg":   "https://upload.wikimedia.org/wikipedia/commons/4/41/Tiberius_bust.jpg",
-              "flavian.jpg":          "https://upload.wikimedia.org/wikipedia/commons/4/40/The_Triumph_of_Titus_Alma_Tadema.jpg",
-              "trajan.jpg":           "https://upload.wikimedia.org/wikipedia/commons/9/9d/Traianus_Glyptothek_Munich_336.jpg",
-              "severan.jpg":          "https://upload.wikimedia.org/wikipedia/commons/1/13/Septimius_Severus_busto-Musei_Capitolini.jpg",
-              "gallic-empire.jpg":    "https://upload.wikimedia.org/wikipedia/commons/1/10/GallicEmpire262.png",
-              "palmyra.jpg":          "https://upload.wikimedia.org/wikipedia/commons/6/6d/Antoninianus_of_Zenobia_%28obverse%29.png",
-              "aurelian.jpg":         "https://upload.wikimedia.org/wikipedia/commons/8/8a/Aureus_of_Aurelian_%28Milan%29_%28obverse%29.jpg",
-              "milvian-bridge.jpg":   "https://upload.wikimedia.org/wikipedia/commons/3/3a/Battle_of_the_Milvian_Bridge_by_Giulio_Romano%2C_1520-24.jpg",
-              "constantinople.jpg":   "https://upload.wikimedia.org/wikipedia/commons/b/bb/Byzantine_Constantinople-en.png",
-              "adrianople.jpg":       "https://upload.wikimedia.org/wikipedia/commons/d/dc/Battle_of_Adrianople_378.jpg",
-              "codex-theodosianus.jpg":"https://upload.wikimedia.org/wikipedia/commons/7/7f/St._Gallen%2C_Ms_Cod._Sang._731_fol_1r_Title_page_for_Codex_Theodosianus_in_the_Breviary_of_Alaric.jpg",
-              "stilicho.jpg":         "https://upload.wikimedia.org/wikipedia/commons/8/8b/Stilico_diptych.jpg",
-              "iconoclasm.jpg":       "https://upload.wikimedia.org/wikipedia/commons/6/6b/Irenekirken.jpg",
-              "ecloga.jpg":           "https://upload.wikimedia.org/wikipedia/commons/b/b3/4KISAURIAN.png",
-              "basilika.jpg":         "https://upload.wikimedia.org/wikipedia/commons/f/f5/Emperor_Leo_VI_detail.jpg",
-              "macedonian.jpg":       "https://upload.wikimedia.org/wikipedia/commons/d/dc/Basilios_II.jpg",
+            "homer.jpg":          "https://upload.wikimedia.org/wikipedia/commons/b/b3/Homer_bust_louvre_front.JPG",
+            "draco.jpg":          "https://upload.wikimedia.org/wikipedia/commons/1/14/Republication_of_Draco_Law_on_homicide_-_408-409_BC.jpg",
+            "cleisthenes.jpg":    "https://upload.wikimedia.org/wikipedia/commons/3/36/Cleisthenes.jpg",
+            "peloponnesian.jpg":  "https://upload.wikimedia.org/wikipedia/commons/e/e8/Before_Peloponnesian_War.png",
+            "macedonia.jpg":      "https://upload.wikimedia.org/wikipedia/commons/3/31/Alexander_the_Great_Empire_map_en.svg",
+            "twelve-tables.jpg": "https://upload.wikimedia.org/wikipedia/commons/a/ab/Twelve_Tables_Engraving.jpg",
+            "gracchi.jpg":        "https://upload.wikimedia.org/wikipedia/commons/8/87/Eugene_Guillaume_-_the_Gracchi.jpg",
+            "sulla.jpg":          "https://upload.wikimedia.org/wikipedia/commons/9/99/Sulla_Glyptothek_Munich_309.jpg",
+            "caesar.jpg":         "https://upload.wikimedia.org/wikipedia/commons/9/96/Bust_of_Julius_Caesar.jpg",
+            "julio-claudian.jpg": "https://upload.wikimedia.org/wikipedia/commons/4/41/Tiberius_bust.jpg",
+            "flavian.jpg":        "https://upload.wikimedia.org/wikipedia/commons/4/40/The_Triumph_of_Titus_Alma_Tadema.jpg",
+            "trajan.jpg":         "https://upload.wikimedia.org/wikipedia/commons/9/9d/Traianus_Glyptothek_Munich_336.jpg",
+            "severan.jpg":        "https://upload.wikimedia.org/wikipedia/commons/1/13/Septimius_Severus_busto-Musei_Capitolini.jpg",
+            "gallic-empire.jpg": "https://upload.wikimedia.org/wikipedia/commons/1/10/GallicEmpire262.png",
+            "palmyra.jpg":        "https://upload.wikimedia.org/wikipedia/commons/6/6d/Antoninianus_of_Zenobia_%28obverse%29.png",
+            "aurelian.jpg":       "https://upload.wikimedia.org/wikipedia/commons/8/8a/Aureus_of_Aurelian_%28Milan%29_%28obverse%29.jpg",
+            "milvian-bridge.jpg": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Battle_of_the_Milvian_Bridge_by_Giulio_Romano%2C_1520-24.jpg",
+            "constantinople.jpg": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Byzantine_Constantinople-en.png",
+            "adrianople.jpg":     "https://upload.wikimedia.org/wikipedia/commons/d/dc/Battle_of_Adrianople_378.jpg",
+            "codex-theodosianus.jpg": "https://upload.wikimedia.org/wikipedia/commons/7/7f/St._Gallen%2C_Ms_Cod._Sang._731_fol_1r_Title_page_for_Codex_Theodosianus_in_the_Breviary_of_Alaric.jpg",
+            "stilicho.jpg":       "https://upload.wikimedia.org/wikipedia/commons/8/8b/Stilico_diptych.jpg",
+            "iconoclasm.jpg":     "https://upload.wikimedia.org/wikipedia/commons/6/6b/Irenekirken.jpg",
+            "ecloga.jpg":         "https://upload.wikimedia.org/wikipedia/commons/b/b3/4KISAURIAN.png",
+            "basilika.jpg":       "https://upload.wikimedia.org/wikipedia/commons/f/f5/Emperor_Leo_VI_detail.jpg",
+            "macedonian.jpg":     "https://upload.wikimedia.org/wikipedia/commons/d/dc/Basilios_II.jpg",
           }
 
           os.makedirs("assets/images", exist_ok=True)
           failed = []
 
           for out_name, url in FILES.items():
-              out_path = f"assets/images/{out_name}"
+            out_path = f"assets/images/{out_name}"
+            success = False
+            for attempt in range(4):
               try:
-                  r = session.get(url, timeout=60)
-                  r.raise_for_status()
-                  ct = r.headers.get("Content-Type", "")
-                  if not ct.startswith("image/"):
-                      print(f"FAIL {out_name}: bad Content-Type '{ct}'")
-                      failed.append(out_name)
-                      continue
-                  with open(out_path, "wb") as f:
-                      f.write(r.content)
-                  print(f"OK {out_name}: {len(r.content)} bytes")
-              except Exception as e:
-                  print(f"FAIL {out_name}: {e}")
+                r = session.get(url, timeout=60)
+                if r.status_code == 429:
+                  wait = 10 * (attempt + 1)
+                  print(f"RATE LIMITED {out_name}, waiting {wait}s (attempt {attempt+1})")
+                  time.sleep(wait)
+                  continue
+                r.raise_for_status()
+                ct = r.headers.get("Content-Type", "")
+                if not ct.startswith("image/"):
+                  print(f"FAIL {out_name}: bad Content-Type '{ct}'")
                   failed.append(out_name)
-              time.sleep(0.5)
+                  break
+                with open(out_path, "wb") as f:
+                  f.write(r.content)
+                print(f"OK {out_name}: {len(r.content)} bytes")
+                success = True
+                break
+              except Exception as e:
+                print(f"FAIL {out_name} attempt {attempt+1}: {e}")
+                time.sleep(5)
+            if not success and out_name not in failed:
+              failed.append(out_name)
+            time.sleep(3)
 
           if failed:
-              print(f"\nFailed files: {failed}")
-              sys.exit(1)
+            print(f"\nFailed files: {failed}")
+            sys.exit(1)
           EOF
 
-      - name: Resize heavy images (>1MB → max 1200px)
+      - name: Resize heavy images (>1MB to max 1200px)
         run: |
           cd assets/images
           for f in *.jpg *.jpeg *.png; do
@@ -87,13 +97,13 @@ jobs:
             if [ "$size" -gt 1048576 ]; then
               echo "Resizing $f ($size bytes)"
               mogrify -resize "1200x1200>" -quality 82 "$f"
-              echo "  → $(stat -c%s "$f") bytes"
+              echo " -> $(stat -c%s "$f") bytes"
             fi
           done
 
       - name: Commit fixed images
         run: |
-          git config user.name  "Timeline Bot"
+          git config user.name "Timeline Bot"
           git config user.email "actions@users.noreply.github.com"
           git add assets/images/
           git diff --cached --quiet && echo "Nothing to commit" || git commit -m "fix: replace broken timeline images with verified Wikimedia originals"
