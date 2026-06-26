@@ -1,0 +1,940 @@
+          <!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лента Времени — ИГПЗС</title>
+<meta name="description" content="Интерактивная лента времени по истории государства и права зарубежных стран: от Троянской войны до падения Византии">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230b0905'/><circle cx='16' cy='16' r='13' stroke='%23c8a050' stroke-width='1' fill='none'/><circle cx='16' cy='16' r='8' stroke='%23c8a050' stroke-width='0.7' fill='none' opacity='.5'/><line x1='16' y1='3' x2='16' y2='29' stroke='%23c8a050' stroke-width='0.7' opacity='.4'/><line x1='3' y1='16' x2='29' y2='16' stroke='%23c8a050' stroke-width='0.7' opacity='.4'/><circle cx='16' cy='16' r='2.5' fill='%23c8a050'/><polygon points='16,6 17.2,10.5 16,9.5 14.8,10.5' fill='%23c8a050' opacity='.8'/></svg>">
+<style>
+:root{
+  --fd:'Cinzel','Georgia',serif;
+  --fb:'EB Garamond','Georgia',serif;
+  --xs:clamp(.72rem,.68rem + .2vw,.82rem);
+  --sm:clamp(.875rem,.82rem + .28vw,1rem);
+  --bs:clamp(1rem,.94rem + .3vw,1.15rem);
+  --lg:clamp(1.15rem,1rem + .75vw,1.5rem);
+  --xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --h:clamp(1.8rem,1rem + 4vw,5rem);
+  --s1:.25rem;--s2:.5rem;--s3:.75rem;--s4:1rem;--s5:1.25rem;--s6:1.5rem;
+  --s8:2rem;--s10:2.5rem;--s12:3rem;--s16:4rem;--s20:5rem;--s24:6rem;
+  --rm:.25rem;--rmd:.5rem;--rl:.75rem;--rxl:1.25rem;--rf:9999px;
+  --ease:cubic-bezier(.16,1,.3,1);--tr:200ms;
+}
+:root,[data-theme="light"]{
+  --bg:#f4efe4;--sf:#faf7f0;--s2c:#fff;--so:#ece5d8;
+  --br:rgba(90,65,30,.14);--dv:rgba(90,65,30,.09);
+  --tx:#1a1208;--tm:#6b5640;--tf:#a8906a;
+  --gd:#8a6425;--gl:#b8922e;--gg:rgba(138,100,37,.13);
+  --eg:#7a5c28;--er:#5c4220;--ep:#2d6b45;
+  --ec:#8a3d18;--ed:#7a1e2c;--eb:#1e3d7a;
+  --sh1:0 1px 4px rgba(30,18,8,.07);
+  --sh2:0 4px 20px rgba(30,18,8,.1);
+  --sh3:0 16px 48px rgba(30,18,8,.14);
+}
+[data-theme="dark"]{
+  --bg:#0b0905;--sf:#131109;--s2c:#1a1710;--so:#0f0d08;
+  --br:rgba(210,175,100,.11);--dv:rgba(210,175,100,.06);
+  --tx:#e6d9c0;--tm:#a08860;--tf:#685844;
+  --gd:#c8a050;--gl:#e0c070;--gg:rgba(200,160,80,.11);
+  --eg:#c8a050;--er:#b89048;--ep:#50a870;
+  --ec:#d47838;--ed:#d04860;--eb:#5888d8;
+  --sh1:0 1px 4px rgba(0,0,0,.28);
+  --sh2:0 4px 20px rgba(0,0,0,.38);
+  --sh3:0 16px 48px rgba(0,0,0,.52);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:6.5rem;-webkit-font-smoothing:antialiased}
+body{font-family:var(--fb);font-size:var(--bs);color:var(--tx);background:var(--bg);
+  min-height:100dvh;line-height:1.7;transition:background .3s,color .3s}
+button{cursor:pointer;font:inherit;border:none;background:none;color:inherit}
+::selection{background:var(--gg);color:var(--tx)}
+:focus-visible{outline:2px solid var(--gd);outline-offset:3px;border-radius:var(--rm)}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  border-bottom:1px solid var(--br);backdrop-filter:blur(16px);
+  padding:var(--s3) var(--s8);display:flex;align-items:center;
+  justify-content:space-between;gap:var(--s4)}
+.hdr-logo{display:flex;align-items:center;gap:var(--s3);
+  text-decoration:none;color:var(--tx)}
+.hdr-logo svg{width:36px;height:36px;flex-shrink:0}
+.hdr-name{font-family:var(--fd);font-size:var(--xs);font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;line-height:1.2}
+.hdr-sub{display:block;font-family:var(--fb);font-style:italic;
+  font-size:.7rem;letter-spacing:.03em;text-transform:none;
+  color:var(--tm);font-weight:400}
+.hdr-ico{width:38px;height:38px;border-radius:var(--rmd);display:flex;
+  align-items:center;justify-content:center;color:var(--tm);
+  border:1px solid transparent;transition:all var(--tr) var(--ease)}
+.hdr-ico:hover{color:var(--tx);background:var(--so);border-color:var(--br)}
+
+/* HERO */
+.hero{position:relative;padding:clamp(var(--s16),10vw,var(--s24)) var(--s6)
+  clamp(var(--s12),7vw,var(--s20));text-align:center;overflow:hidden}
+
+  /* AUTHORS & CONTROLS */
+.hdr-right{display:flex;align-items:center;gap:var(--s3)}
+.hdr-authors{font-family:var(--fb);font-size:.7rem;color:var(--tf);font-style:italic;margin-right:var(--s2)}
+.hdr-authors::before{content:'Авторы: ';font-weight:500;color:var(--tm)}
+
+/* FULLSCREEN */
+body.fullscreen .era-nav,
+body.fullscreen .hero,
+body.fullscreen .ft{display:none!important}
+body.fullscreen{overflow:hidden;height:100vh;background:var(--bg)}
+body.fullscreen .hdr{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--bg);border-bottom:1px solid var(--br)}
+body.fullscreen main#main{
+  position:fixed;top:3.8rem;left:0;right:0;bottom:0;
+  overflow-y:auto;overflow-x:hidden;
+  padding:var(--s4) var(--s4) var(--s16);
+  background:var(--bg);
+  box-sizing:border-box}
+body.fullscreen .tl-sec{padding-top:0;max-width:1080px;margin:0 auto}
+body.fullscreen .tl-wrap{max-width:100%}
+#fs-exit-btn{display:none;position:fixed;bottom:var(--s6);right:var(--s6);z-index:300;
+  background:var(--gd);color:#1a1400;border:none;border-radius:var(--rf);
+  padding:var(--s2) var(--s5);font-family:var(--fd);font-size:var(--xs);
+  letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.4);
+  transition:opacity .2s,transform .2s}
+#fs-exit-btn:hover{opacity:.85;transform:translateY(-2px)}
+body.fullscreen #fs-exit-btn{display:block}
+
+/* HORIZONTAL SCROLL MODE */
+/* horizontal mode removed */
+
+/* CARD IMAGES */
+.tl-img{position:relative;width:100%;height:160px;object-fit:contain;border-radius:var(--rl);margin-bottom:var(--s3);background:var(--so);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--tf);font-size:var(--xs);border:1px solid var(--br)}
+.tl-img img{width:100%;height:100%;object-fit:contain;border-radius:inherit}
+.tl-img-fallback{padding:var(--s4);text-align:center;line-height:1.4}
+
+.hero-glow{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 90% 55% at 50% 0%,var(--gg),transparent 68%)}
+.hero-bar{position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gd) 30%,var(--gl) 50%,var(--gd) 70%,transparent);
+  opacity:.55}
+.hero-in{position:relative;max-width:820px;margin:0 auto}
+.hero-ey{font-family:var(--fd);font-size:var(--xs);letter-spacing:.28em;
+  text-transform:uppercase;color:var(--gd);margin-bottom:var(--s5);
+  display:flex;align-items:center;justify-content:center;gap:var(--s4)}
+.hero-ey::before,.hero-ey::after{content:'';height:1px;width:36px;
+  background:var(--gd);opacity:.45}
+h1{font-family:var(--fd);font-size:var(--h);font-weight:700;
+  letter-spacing:-.015em;color:var(--tx);margin-bottom:var(--s5)}
+h1 em{color:var(--gd);font-style:normal}
+.hero-desc{font-size:var(--lg);color:var(--tm);font-style:italic;
+  max-width:54ch;margin:0 auto var(--s8);line-height:1.65}
+.hero-rng{display:flex;align-items:center;justify-content:center;gap:var(--s5);
+  font-family:var(--fd);font-size:var(--xs);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tf)}
+.hero-rng-ln{width:56px;height:1px;background:var(--gd);opacity:.28}
+
+/* ERA NAV */
+.era-nav{position:sticky;top:60px;z-index:90;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--dv);
+  padding:var(--s2) var(--s8);display:flex;align-items:center;
+  gap:var(--s2);overflow-x:auto;scrollbar-width:none}
+.era-nav::-webkit-scrollbar{display:none}
+.era-btn{padding:var(--s2) var(--s4);border-radius:var(--rf);
+  font-family:var(--fd);font-size:var(--xs);letter-spacing:.1em;
+  text-transform:uppercase;white-space:nowrap;color:var(--tm);
+  border:1px solid var(--br);background:transparent;
+  transition:all var(--tr) var(--ease)}
+.era-btn:hover{color:var(--tx);background:var(--so)}
+.era-btn.on{border-color:transparent}
+.era-btn[data-era="all"].on{background:var(--gd);color:#fff}
+.era-btn[data-era="greek"].on{background:var(--eg);color:#fff}
+.era-btn[data-era="republic"].on{background:var(--er);color:#fff}
+.era-btn[data-era="principat"].on{background:var(--ep);color:#fff}
+.era-btn[data-era="crisis"].on{background:var(--ec);color:#fff}
+.era-btn[data-era="dominat"].on{background:var(--ed);color:#fff}
+.era-btn[data-era="byzantium"].on{background:var(--eb);color:#fff}
+
+/* TIMELINE */
+.tl-sec{padding:clamp(var(--s10),6vw,var(--s20)) var(--s6);
+  max-width:1080px;margin:0 auto}
+.tl-wrap{position:relative}
+.tl-wrap::before{content:'';position:absolute;left:50%;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,
+  var(--gd) 5%,var(--gd) 95%,transparent);
+  transform:translateX(-50%);opacity:.2;pointer-events:none}
+
+/* Era group */
+.era-grp{margin-bottom:var(--s4)}
+.era-hdr{display:flex;align-items:center;gap:var(--s4);
+  margin-bottom:var(--s10);position:relative;z-index:2}
+.era-hdr-ln{flex:1;height:1px;background:var(--br)}
+.era-hdr-lb{font-family:var(--fd);font-size:var(--xs);letter-spacing:.22em;
+  text-transform:uppercase;padding:var(--s2) var(--s5);border-radius:var(--rf);
+  border:1px solid;background:var(--bg);white-space:nowrap;position:relative;z-index:2}
+.era-grp[data-era="greek"]     .era-hdr-lb{color:var(--eg);border-color:var(--eg)}
+.era-grp[data-era="republic"]  .era-hdr-lb{color:var(--er);border-color:var(--er)}
+.era-grp[data-era="principat"] .era-hdr-lb{color:var(--ep);border-color:var(--ep)}
+.era-grp[data-era="crisis"]    .era-hdr-lb{color:var(--ec);border-color:var(--ec)}
+.era-grp[data-era="dominat"]   .era-hdr-lb{color:var(--ed);border-color:var(--ed)}
+.era-grp[data-era="byzantium"] .era-hdr-lb{color:var(--eb);border-color:var(--eb)}
+
+/* Items */
+.tl-list{display:flex;flex-direction:column;gap:var(--s8);
+  margin-bottom:var(--s12)}
+
+/* Single item — uses data-side="L" or "R" */
+.tl-item{display:grid;grid-template-columns:1fr 52px 1fr;
+  grid-template-areas:"card node void";
+  align-items:start}
+.tl-item[data-side="R"]{grid-template-areas:"void node card"}
+.tl-card{grid-area:card}
+.tl-node-wrap{grid-area:node;display:flex;flex-direction:column;
+  align-items:center;padding-top:var(--s5)}
+.tl-void{grid-area:void}
+
+/* Card text align */
+.tl-item[data-side="L"] .tl-card{text-align:right}
+.tl-item[data-side="R"] .tl-card{text-align:left}
+
+/* Node dot */
+.tl-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;
+  position:relative;z-index:2;border:2.5px solid var(--bg);
+  transition:transform var(--tr) var(--ease),box-shadow var(--tr)}
+.tl-item:hover .tl-dot{transform:scale(1.5)}
+.tl-item[data-era="greek"]     .tl-dot{background:var(--eg);box-shadow:0 0 0 3px color-mix(in srgb,var(--eg) 25%,transparent)}
+.tl-item[data-era="republic"]  .tl-dot{background:var(--er);box-shadow:0 0 0 3px color-mix(in srgb,var(--er) 25%,transparent)}
+.tl-item[data-era="principat"] .tl-dot{background:var(--ep);box-shadow:0 0 0 4px color-mix(in srgb,var(--ep) 22%,transparent)}
+.tl-item[data-era="crisis"]    .tl-dot{background:var(--ec);box-shadow:0 0 0 3px color-mix(in srgb,var(--ec) 25%,transparent)}
+.tl-item[data-era="dominat"]   .tl-dot{background:var(--ed);box-shadow:0 0 0 4px color-mix(in srgb,var(--ed) 22%,transparent)}
+.tl-item[data-era="byzantium"] .tl-dot{background:var(--eb);box-shadow:0 0 0 3px color-mix(in srgb,var(--eb) 22%,transparent)}
+
+/* Card */
+.tl-card{background:var(--sf);border:1px solid var(--br);
+  border-radius:var(--rxl);padding:var(--s5) var(--s6);cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:transform var(--tr) var(--ease),box-shadow var(--tr),border-color var(--tr)}
+.tl-card:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.tl-card::after{content:'';position:absolute;top:0;left:0;right:0;
+  height:2px;opacity:0;transition:opacity var(--tr)}
+.tl-card:hover::after,.tl-card.full::after{opacity:1}
+.tl-item[data-era="greek"]     .tl-card::after{background:var(--eg)}
+.tl-item[data-era="republic"]  .tl-card::after{background:var(--er)}
+.tl-item[data-era="principat"] .tl-card::after{background:var(--ep)}
+.tl-item[data-era="crisis"]    .tl-card::after{background:var(--ec)}
+.tl-item[data-era="dominat"]   .tl-card::after{background:var(--ed)}
+.tl-item[data-era="byzantium"] .tl-card::after{background:var(--eb)}
+
+.tl-dt{font-family:var(--fd);font-size:var(--xs);letter-spacing:.12em;
+  text-transform:uppercase;margin-bottom:var(--s2)}
+.tl-item[data-era="greek"]     .tl-dt{color:var(--eg)}
+.tl-item[data-era="republic"]  .tl-dt{color:var(--er)}
+.tl-item[data-era="principat"] .tl-dt{color:var(--ep)}
+.tl-item[data-era="crisis"]    .tl-dt{color:var(--ec)}
+.tl-item[data-era="dominat"]   .tl-dt{color:var(--ed)}
+.tl-item[data-era="byzantium"] .tl-dt{color:var(--eb)}
+
+.tl-tt{font-family:var(--fd);font-size:var(--bs);font-weight:600;
+  line-height:1.3;color:var(--tx);margin-bottom:var(--s3)}
+.tl-ex{font-size:var(--sm);color:var(--tm);line-height:1.65;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tl-ft{margin-top:var(--s4);display:flex;align-items:center;
+  gap:var(--s3);flex-wrap:wrap}
+.tl-item[data-side="L"] .tl-ft{justify-content:flex-end}
+.tl-item[data-side="R"] .tl-ft{justify-content:flex-start}
+.tl-badge{font-family:var(--fd);font-size:.62rem;letter-spacing:.14em;
+  text-transform:uppercase;padding:3px 10px;border-radius:var(--rf);
+  background:var(--so);color:var(--tf);border:1px solid var(--br)}
+.tl-badge.bf{background:transparent}
+.tl-item[data-era="principat"] .tl-badge.bf{color:var(--ep);border-color:var(--ep)}
+.tl-item[data-era="crisis"]    .tl-badge.bf{color:var(--ec);border-color:var(--ec)}
+.tl-item[data-era="dominat"]   .tl-badge.bf{color:var(--ed);border-color:var(--ed)}
+.tl-item[data-era="byzantium"] .tl-badge.bf{color:var(--eb);border-color:var(--eb)}
+.tl-more{font-family:var(--fd);font-size:var(--xs);letter-spacing:.07em;
+  color:var(--gd);opacity:0;transition:opacity var(--tr)}
+.tl-card:hover .tl-more{opacity:1}
+
+/* MODAL */
+.m-ov{position:fixed;inset:0;z-index:200;display:flex;align-items:center;
+  justify-content:center;padding:var(--s6);
+  background:rgba(0,0,0,.74);backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity .28s ease}
+.m-ov.on{opacity:1;pointer-events:all}
+.m-box{background:var(--s2c);border:1px solid var(--br);border-radius:var(--rxl);
+  max-width:680px;width:100%;max-height:88vh;overflow-y:auto;
+  box-shadow:var(--sh3);transform:translateY(22px) scale(.97);
+  transition:transform .3s var(--ease)}
+.m-ov.on .m-box{transform:none}
+.m-hd{padding:var(--s6) var(--s8) var(--s5);border-bottom:1px solid var(--dv);
+  position:relative}
+.m-era{font-family:var(--fd);font-size:var(--xs);letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gd);margin-bottom:var(--s2)}
+.m-date{font-family:var(--fd);font-size:var(--sm);color:var(--tm);
+  letter-spacing:.1em;margin-bottom:var(--s3)}
+.m-tit{font-family:var(--fd);font-size:var(--xl);font-weight:700;
+  line-height:1.2;color:var(--tx)}
+.m-cls{position:absolute;top:var(--s5);right:var(--s5);width:36px;
+  height:36px;border-radius:var(--rmd);display:flex;align-items:center;
+  justify-content:center;color:var(--tf);border:1px solid var(--br);
+  transition:all var(--tr) var(--ease)}
+.m-cls:hover{color:var(--tx);background:var(--so)}
+.m-bd{padding:var(--s6) var(--s8) var(--s10)}
+.m-txt{font-size:var(--bs);line-height:1.8;color:var(--tm)}
+.m-txt p{max-width:62ch;margin-bottom:var(--s4)}
+.m-txt p:last-child{margin-bottom:0}
+.m-txt strong{color:var(--tx);font-weight:600}
+.m-div{width:44px;height:1px;background:var(--gd);opacity:.35;margin:var(--s5) 0}
+.m-facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:var(--s3);margin-top:var(--s6)}
+.m-fact{background:var(--so);border-radius:var(--rl);padding:var(--s3) var(--s4);
+  border:1px solid var(--br)}
+.m-fk{font-family:var(--fd);font-size:.65rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--tf);margin-bottom:var(--s1)}
+.m-fv{font-size:var(--sm);color:var(--tx);font-weight:500}
+
+/* FOOTER */
+.ft{margin-top:var(--s24);padding:var(--s10) var(--s6);
+  border-top:1px solid var(--br);text-align:center;
+  color:var(--tf);font-size:var(--xs);letter-spacing:.05em;font-style:italic}
+.ft b{color:var(--gd);font-style:normal;font-weight:500}
+
+/* RESPONSIVE */
+@media(max-width:680px){
+  .tl-wrap::before{left:22px}
+  .tl-item,.tl-item[data-side="R"]{
+    display:grid;grid-template-columns:44px 1fr;
+    grid-template-areas:"node card"}
+  .tl-void{display:none}
+  .tl-card{text-align:left!important}
+  .tl-ft{justify-content:flex-start!important}
+  .m-hd,.m-bd{padding-inline:var(--s4)}
+  .m-tit{font-size:var(--lg)}
+  .hdr{padding:var(--s3) var(--s4);flex-wrap:nowrap;gap:var(--s2)}
+  .hdr-logo span.hdr-sub{display:none}
+  .hdr-authors{display:none}
+  .hdr-right{gap:var(--s2)}
+  .era-nav{padding-inline:var(--s3)}
+  .tl-sec{padding-inline:var(--s3)}
+  .tl-img{height:130px}
+  .hero{padding:var(--s10) var(--s4) var(--s8)}
+  .hero-ey{font-size:.6rem;letter-spacing:.15em}
+  .hero-desc{font-size:var(--sm)}
+  body.fullscreen main#main{top:3.5rem}
+  #fs-exit-btn{bottom:var(--s4);right:var(--s4);font-size:.65rem;padding:var(--s2) var(--s4)}
+}
+@media(max-width:400px){
+  .hdr-authors{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr" role="banner">
+  <a href="#" class="hdr-logo" aria-label="На главную">
+    <svg viewBox="0 0 36 36" fill="none" aria-hidden="true">
+      <circle cx="18" cy="18" r="16" stroke="currentColor" stroke-width=".8" opacity=".25"/>
+      <circle cx="18" cy="18" r="11" stroke="currentColor" stroke-width=".6" opacity=".18"/>
+      <line x1="18" y1="2" x2="18" y2="34" stroke="currentColor" stroke-width=".6" opacity=".2"/>
+      <line x1="2" y1="18" x2="34" y2="18" stroke="currentColor" stroke-width=".6" opacity=".2"/>
+      <line x1="5.6" y1="5.6" x2="30.4" y2="30.4" stroke="currentColor" stroke-width=".4" opacity=".12"/>
+      <line x1="30.4" y1="5.6" x2="5.6" y2="30.4" stroke="currentColor" stroke-width=".4" opacity=".12"/>
+      <circle cx="18" cy="18" r="3" fill="var(--gd)"/>
+      <circle cx="18" cy="2" r="1.4" fill="var(--gd)" opacity=".6"/>
+      <circle cx="18" cy="34" r="1.4" fill="var(--gd)" opacity=".3"/>
+      <circle cx="2" cy="18" r="1.4" fill="var(--gd)" opacity=".3"/>
+      <circle cx="34" cy="18" r="1.4" fill="var(--gd)" opacity=".3"/>
+      <path d="M18 7 L19.3 11.5 L18 10.3 L16.7 11.5Z" fill="var(--gd)" opacity=".7"/>
+    </svg>
+    <div>
+      <span class="hdr-name">Лента Времени
+        <span class="hdr-sub">История государства и права</span>
+      </span>
+    </div>
+  </a>
+  <button class="hdr-ico" id="thbtn" aria-label="Светлая тема">
+    
+      
+    <svg id="thico" width="17" height="17" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+  <div class="hdr-right">
+    <span class="hdr-authors">Гребенников Д.М., Воронов К.К., Трескин С.Р., Волченко И.А., Камерилов Д.Р.</span>
+    <button class="hdr-ico" id="fsbtn" aria-label="Полноэкранный режим" title="Полноэкранный режим">
+      <svg id="fsico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+      </svg>
+    </button>
+  </div>
+</header>
+<button id="fs-exit-btn" onclick="document.getElementById('fsbtn').click()" aria-label="Выйти из полноэкранного режима">✕ Выйти из полноэкранного</button>
+
+<!-- HERO -->
+<section class="hero" aria-labelledby="hh1">
+  <div class="hero-glow" aria-hidden="true"></div>
+  
+  <div class="hero-bar" aria-hidden="true"></div>
+  <div class="hero-in">
+    <p class="hero-ey">История государства и права зарубежных стран</p>
+    <h1 id="hh1">Лента&nbsp;<em>Времени</em></h1>
+    <p class="hero-desc">От стен горящей Трои до падения последней твердыни Рима
+      на Востоке — двадцать шесть веков права, власти и государственности.</p>
+    <div class="hero-rng" aria-label="Диапазон: от 1200 до н.э. до 1453 н.э.">
+      <span>≈ 1200 до н.э.</span>
+      <div class="hero-rng-ln" aria-hidden="true"></div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gd)" aria-hidden="true">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      <div class="hero-rng-ln" aria-hidden="true"></div>
+      <span>1453 н.э.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ERA NAV -->
+<nav class="era-nav" aria-label="Фильтр по эпохам">
+  <button class="era-btn on" data-era="all">Все эпохи</button>
+  <button class="era-btn" data-era="greek">Древняя Греция</button>
+  <button class="era-btn" data-era="republic">Республика</button>
+  <button class="era-btn" data-era="principat">Принципат</button>
+  <button class="era-btn" data-era="crisis">Кризис III в.</button>
+  <button class="era-btn" data-era="dominat">Доминат</button>
+  <button class="era-btn" data-era="byzantium">Византия</button>
+</nav>
+
+<!-- TIMELINE -->
+<main class="tl-sec" id="main">
+  <div class="tl-wrap" id="tlw"></div>
+</main>
+
+<!-- FOOTER -->
+<footer class="ft">
+  <p>Учебный проект &nbsp;·&nbsp; <b>ИГПЗС</b> &nbsp;·&nbsp;
+     Принципат — Доминат &nbsp;·&nbsp; История государства и права зарубежных стран</p>
+</footer>
+
+<!-- MODAL -->
+<div class="m-ov" id="modal" role="dialog" aria-modal="true" aria-labelledby="mtit">
+  <div class="m-box">
+    <div class="m-hd">
+      <p class="m-era" id="mera"></p>
+      <p class="m-date" id="mdate"></p>
+      <h2 class="m-tit" id="mtit"></h2>
+      <button class="m-cls" id="mcls" aria-label="Закрыть">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="m-bd">
+      <div class="m-txt" id="mtxt"></div>
+      <div class="m-facts" id="mfacts"></div>
+    </div>
+  </div>
+</div>
+<script>
+// DATA
+const EV = [
+  {era:'greek',eraL:'Древняя Греция',date:'≈ 1200 до н.э.',
+   title:'Троянская война',det:'brief',
+   ex:'Десятилетняя война ахейских государств против Трои. Исторический рубеж эпохи и отправная точка эллинской правовой памяти.',
+   full:`<p>Троянская война (≈ 1200–1190 до н.э.) — вооружённый конфликт коалиции ахейских государств против Трои на северо-западе Малой Азии. В основе — союзническая и торговая конкуренция ранних греческих полисов.</p><div class="m-div"></div><p>Правовая жизнь эпохи описана через гомеровские поэмы: обычное право, родовые суды, <strong>фемида</strong> как воля богов и <strong>дике</strong> как человеческая справедливость. Власть принадлежала <strong>басилею</strong> — военному вождю, сочетавшему жреческие и судебные функции.</p>`,
+   facts:[{k:'Период',v:'≈ 1200–1190 до н.э.'},{k:'Право',v:'Обычное, родовое'},{k:'Власть',v:'Басилей'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'VII–V вв. до н.э.',
+   title:'Полисная демократия и законодательство',det:'brief',
+   ex:'Законы Драконта и Солона в Афинах — первые писаные правовые системы Западного мира. Рождение полисного строя и гражданского права.',
+   full:`<p>Архаическая и классическая Греция — эпоха становления <strong>полисного строя</strong>. Греческий полис сочетал функции города, государства и религиозной общины. Гражданин был неотделим от гражданского коллектива.</p><div class="m-div"></div><p>Законы <strong>Драконта</strong> (621 до н.э.) — первые писаные нормы Афин, принципиально важные: право перестало быть тайным знанием жрецов. <strong>Реформы Солона</strong> (594 до н.э.) упразднили долговое рабство, ввели имущественный ценз и суд присяжных — гелиэю. Это прямое предшествие республиканских правовых институтов Рима.</p>`,
+   facts:[{k:'Ключевые фигуры',v:'Солон, Дракон, Клисфен'},{k:'Институты',v:'Экклесия, Гелиэя, Буле'},{k:'Принцип',v:'Писаный закон'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'509 до н.э.',
+   title:'Основание Республики',det:'brief',
+   ex:'Свержение Тарквиния Гордого. Установление консульства и начало сенатской республики с балансом между патрициями и плебеями.',
+   full:`<p>В 509 до н.э. римляне упразднили царскую власть и учредили <strong>Республику</strong>. Высшая власть перешла к двум консулам, избираемым ежегодно. Система строилась на принципах <strong>коллегиальности</strong> и <strong>годичности</strong> магистратур.</p><div class="m-div"></div><p>Конфликт патрициев и плебеев привёл к <strong>Законам XII таблиц</strong> (451–450 до н.э.) — первому кодексу писаного римского права, доступного всем гражданам. Трибунат стал противовесом консульской власти.</p>`,
+   facts:[{k:'Период',v:'509–27 до н.э.'},{k:'Документ',v:'XII таблиц, 451 до н.э.'},{k:'Принцип',v:'Коллегиальность'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'III–I вв. до н.э.',
+   title:'Расцвет и кризис Республики',det:'brief',
+   ex:'Пунические войны, завоевание Средиземноморья. Нарастание противоречий между сенатской олигархией и народными трибунами. Диктатуры Суллы и Цезаря.',
+   full:`<p>Завоевание Карфагена, Греции и Востока принесло богатства, но разрушило крестьянство — основу республиканского гражданства. <strong>Братья Гракхи</strong> (133–121 до н.э.) попытались провести земельные реформы — и погибли.</p><div class="m-div"></div><p>Эпоха Суллы, Цезаря и Помпея обнажила главный порок Республики: военные командиры со своими армиями стали реальной политической силой. Сенат утратил монополию на власть. Кризис логично завершился установлением единоличного правления.</p>`,
+   facts:[{k:'Кризис',v:'Эпоха Гракхов'},{k:'Итог',v:'Диктатуры Суллы и Цезаря'},{k:'Право',v:'Эдикты преторов'}]},
+
+  {era:'principat',eraL:'Принципат',date:'27 до н.э.',
+   title:'Установление принципата. Август',det:'full',
+   ex:'После гражданских войн Октавиан сосредоточил власть, сохранив республиканские формы. Принципат — монархия в республиканской оболочке.',
+   full:`<p>В 27 до н.э. сенат присвоил Октавиану титул <strong>«Август»</strong>. Официально он именовался <em>princeps senatus</em> — «первый в сенате». Формально республиканские институты сохранялись, но реальная власть была сосредоточена в руках принцепса.</p><div class="m-div"></div><p>Август соединил <strong>трибунскую власть</strong> (священная неприкосновенность и право вето), <strong>проконсульский империй</strong> (командование армией и провинциями) и <strong>власть над религией</strong> (великий понтифик). Сенат управлял «сенаторскими» провинциями; принцепс — «императорскими» — пограничными и богатейшими.</p>`,
+   facts:[{k:'Дата',v:'27 до н.э. — 14 н.э.'},{k:'Титул',v:'Принцепс, Август'},{k:'Основа власти',v:'Армия, трибунат, сенат'},{k:'Столица',v:'Рим'}]},
+
+  {era:'principat',eraL:'Принципат',date:'27 до н.э. – 235 н.э.',
+   title:'Государственный строй принципата',det:'full',
+   ex:'Принцепс совмещал военную, гражданскую и религиозную власть. Сенат — формальный престиж, армия — реальное влияние. Бюрократия вытесняла магистратуры.',
+   full:`<p>Государственный механизм принципата опирался на <strong>двоевластие</strong>: принцепс правил де-факто, сенат — де-юре. Провинции делились на <em>сенаторские</em> (мирные) и <em>императорские</em> (пограничные).</p><div class="m-div"></div><p>Бюрократический аппарат вытеснял магистратуры. При Августе появились <strong>префектуры</strong>: претория, анноны, пожарной охраны, Египта. Традиционные должности сохранялись как почётные. Реальное управление перешло к <strong>императорским чиновникам-всадникам</strong>, что разрушало сенаторскую монополию на государственные посты.</p>`,
+   facts:[{k:'Армия',v:'25 легионов'},{k:'Охрана',v:'Преторианская гвардия'},{k:'Провинции',v:'Сенаторские и императорские'},{k:'Бюрократия',v:'Всаднические префекты'}]},
+
+  {era:'principat',eraL:'Принципат',date:'I–III вв. н.э.',
+   title:'Классическая юриспруденция',det:'full',
+   ex:'Золотой век римского права: Гай, Папиниан, Ульпиан, Павел. Responsa, эдикты преторов, конституции принцепсов как источники права.',
+   full:`<p>Эпоха принципата — <strong>расцвет классической юриспруденции</strong>. Юристы получили право давать ответы от имени принцепса (<em>ius respondendi</em>), что делало их трактовки обязательными для судей. Возникли две школы: <strong>прокулианцы</strong> и <strong>сабинианцы</strong>.</p><div class="m-div"></div><p>Великие юристы II–III вв.: <strong>Гай</strong> («Институции» — основа кодификации Юстиниана), <strong>Папиниан</strong>, <strong>Ульпиан</strong> и <strong>Павел</strong> (их тексты составят треть Дигест). Преторский эдикт, кодифицированный Юлианом при Адриане (130 н.э.), закрепил достижения правотворчества.</p>`,
+   facts:[{k:'Юристы',v:'Гай, Папиниан, Ульпиан, Павел'},{k:'Источник',v:'Responsa, эдикты, конституции'},{k:'Эдикт',v:'Кодифицирован 130 н.э.'},{k:'Труд',v:'Институции Гая, II в.'}]},
+
+  {era:'principat',eraL:'Принципат',date:'96–192 н.э.',
+   title:'Эпоха пяти хороших императоров',det:'full',
+   ex:'Нерва, Траян, Адриан, Антонин Пий, Марк Аврелий — апогей принципата. Расцвет провинциального управления, правовой мысли, стоической философии власти.',
+   full:`<p>Эпоха Антонинов — <strong>апогей принципата</strong>. Власть передавалась не по наследству, а через усыновление достойнейшего. Траян раздвинул границы империи до максимума; Адриан укрепил лимесы и кодифицировал преторский эдикт.</p><div class="m-div"></div><p>Марк Аврелий (161–180) — философ-стоик на троне — гуманизировал законодательство: ограничил власть домовладыки, расширил права вольноотпущенников и детей. Активно развивалось <strong>ius gentium</strong> (право народов) как универсальный стандарт для римлян и провинциалов.</p>`,
+   facts:[{k:'Период',v:'96–192 н.э.'},{k:'Преемство',v:'Усыновление лучшего'},{k:'Реформы',v:'Эдикт Адриана, 130 н.э.'},{k:'Философия',v:'Стоицизм Марка Аврелия'}]},
+
+  {era:'crisis',eraL:'Кризис III века',date:'235–284 н.э.',
+   title:'Кризис III века: солдатские императоры',det:'full',
+   ex:'Полвека нестабильности, 26 законных императоров за 50 лет. Армия стала главным инструментом возведения и свержения правителей.',
+   full:`<p>После убийства Александра Севера (235 н.э.) Рим вошёл в хаос. За полвека сменилось <strong>более двадцати «законных» императоров</strong>, не считая узурпаторов. Легионы на Рейне, Дунае и в Сирии провозглашали своих ставленников, не считаясь с сенатом.</p><div class="m-div"></div><p>Кризис имел системные причины: <strong>финансовое истощение</strong>, порча монеты, инфляция, эпидемии, набеги германцев и Сасанидской Персии. Правовая жизнь замерла. Кризис показал, что принципат исчерпал себя и требует радикальной реформы.</p>`,
+   facts:[{k:'Период',v:'235–284 н.э.'},{k:'Императоров',v:'26 «законных»'},{k:'Угрозы',v:'Германцы, Персия, сепаратизм'},{k:'Итог',v:'Реформы Диоклетиана'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'284 н.э.',
+   title:'Установление домината. Диоклетиан',det:'full',
+   ex:'Диоклетиан открыто провозгласил монархию. Принцепс стал «dominus et deus». Тетрархия, диоцезы, жёсткая вертикаль власти и всеобщая перепись.',
+   full:`<p>Диоклетиан (284–305) сломал республиканские фикции принципата. Он принял титул <strong><em>dominus et deus</em></strong>, ввёл придворный церемониал по персидскому образцу (проскинезис — падение ниц), облачился в пурпур и диадему. Власть стала открыто сакральной и абсолютной.</p><div class="m-div"></div><p>Главной реформой стала <strong>тетрархия</strong>: империя разделена между двумя августами и двумя цезарями. Провинции реорганизованы в 100+ единиц, объединённых в <strong>диоцезы</strong>. Налоговая реформа (capitis et iugatio) ввела первую всеобщую перепись населения и имущества.</p>`,
+   facts:[{k:'Правление',v:'284–305 н.э.'},{k:'Форма',v:'Dominus et deus'},{k:'Реформа',v:'Тетрархия, диоцезы'},{k:'Армия',v:'Лимитаны / комитатенсы'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'306–337 н.э.',
+   title:'Константин Великий. Христианство и право',det:'full',
+   ex:'Константин устранил тетрархию, перенёс столицу в Константинополь и легализовал христианство. Государство обрело новую идеологическую основу.',
+   full:`<p><strong>Константин I</strong> (306–337) восстановил единовластие. В 313 н.э. <strong>Миланским эдиктом</strong> даровал христианам свободу вероисповедания; в 325 н.э. созвал <strong>Никейский собор</strong>, поставив церковь под государственный контроль. Союз империи и церкви стал фундаментом средневековой политической доктрины.</p><div class="m-div"></div><p>В 330 н.э. столица перенесена в <strong>Константинополь</strong> — «Новый Рим» на Босфоре. Правовые реформы Константина усилили роль <strong>episcopalis audientia</strong> (епископских судов) и ограничили долговое рабство под влиянием христианской этики.</p>`,
+   facts:[{k:'Столица',v:'Константинополь, 330 н.э.'},{k:'Религия',v:'Миланский эдикт, 313'},{k:'Собор',v:'Никейский, 325 н.э.'},{k:'Право',v:'Episcopalis audientia'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'IV–V вв. н.э.',
+   title:'Право домината: кодификации',det:'full',
+   ex:'Единственный источник права — конституции императора. Кодексы Григориана, Гермогениана и Феодосия II систематизируют законодательство домината.',
+   full:`<p>В эпоху домината <strong>единственным источником права</strong> стали конституции императора: эдикты, рескрипты, мандаты, декреты. Творческая роль юриспруденции угасла — юристы комментировали старые тексты.</p><div class="m-div"></div><p><strong>Кодекс Григориана</strong> (≈291) и <strong>Кодекс Гермогениана</strong> (≈295) собрали рескрипты от Адриана до Диоклетиана. <strong>Кодекс Феодосия II</strong> (438 н.э.) — первая официальная кодификация, обязательная для обеих частей империи. Он стал прообразом кодификации Юстиниана и повлиял на «вар��арские правды».</p>`,
+   facts:[{k:'Кодекс Григориана',v:'≈ 291 н.э.'},{k:'Кодекс Гермогениана',v:'≈ 295 н.э.'},{k:'Кодекс Феодосия',v:'438 н.э.'},{k:'Принцип',v:'Воля императора = закон'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'395 н.э.',
+   title:'Раздел империи: Запад и Восток',det:'full',
+   ex:'После смерти Феодосия I империя окончательно разделилась. Западная половина оказалась под нарастающим давлением германских племён и варварских федератов.',
+   full:`<p>В 395 н.э. <strong>Феодосий I</strong> — последний правитель единой империи — разделил её между сыновьями: <strong>Аркадий</strong> получил Восток (Константинополь), <strong>Гонорий</strong> — Запад (Равенна). Разделение было административным, но стало необратимым.</p><div class="m-div"></div><p>Западная половина стремительно слабела. Реальными правителями стали <strong>военные магистры-варвары</strong> (Стилихон, Аэций, Рицимер). Правовая система деградировала; провинциальные суды всё чаще применяли местные обычаи вместо римского права.</p>`,
+   facts:[{k:'Дата раздела',v:'395 н.э.'},{k:'Запад',v:'Равенна, Гонорий'},{k:'Восток',v:'Константинополь, Аркадий'},{k:'Угроза',v:'Варварские федераты'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'476 н.э.',
+   title:'Падение Западной Римской империи',det:'full',
+   ex:'Одоакр сверг последнего императора Ромула Августула. Формальный конец Западной Римской империи и начало эпохи варварских королевств в Европе.',
+   full:`<p>4 сентября 476 н.э. вождь германских наёмников <strong>Одоакр</strong> низложил <strong>Ромула Августула</strong> и отослал знаки императорского достоинства в Константинополь. Традиционный рубеж Античности и Средних веков.</p><div class="m-div"></div><p>Падение не было катастрофическим разрывом: <strong>римское право</strong> продолжало действовать в варварских королевствах через «варварские правды». Церковь сохранила латинский язык и правовую культуру. <strong>Восточная империя</strong> пережила Запад на тысячу лет, сохранив и развив римское наследие.</p>`,
+   facts:[{k:'Дата',v:'476 н.э.'},{k:'Последний импер.',v:'Ромул Августул'},{k:'Преемники',v:'Варварские королевства'},{k:'Наследие',v:'Варварские правды'}]},
+
+  {era:'byzantium',eraL:'Ранняя Византия',date:'527–565 н.э.',
+   title:'Юстиниан I и Corpus Juris Civilis',det:'full',
+   ex:'Величайшая кодификация в истории права. Институции, Дигесты, Кодекс и Новеллы стали фундаментом европейского частного права на тысячу лет.',
+   full:`<p>Под руководством юриста <strong>Трибониана</strong> за три года (529–534) создан <em>Corpus Juris Civilis</em>: <strong>Кодекс</strong> (конституции), <strong>Дигесты</strong> (фрагменты 39 классических юристов), <strong>Институции</strong> (учебник) и <strong>Новеллы</strong> (новые законы Юстиниана).</p><div class="m-div"></div><p>Corpus стал основой <strong>рецепции римского права</strong> в Европе XI–XVI вв. и продолжает действовать в романо-германских правовых системах. Параллельно Юстиниан попытался восстановить единую империю, отвоевав Италию и Северную Африку.</p>`,
+   facts:[{k:'Период',v:'527–565 н.э.'},{k:'Дигесты',v:'534 н.э.'},{k:'Кодификация',v:'Corpus Juris Civilis'},{k:'Влияние',v:'Вся Европа, XII–XIX вв.'}]},
+
+  {era:'byzantium',eraL:'Средняя Византия',date:'VII–XI вв.',
+   title:'Средневизантийский период',det:'brief',
+   ex:'Арабские завоевания, иконоборчество, фемная система. Эклога Льва III и Василики — правовое законодательство на греческом языке.',
+   full:`<p>Арабские завоевания VII в. отрезали Египет и Сирию. Государство реорганизовалось в <strong>фемную систему</strong>: военно-административные округа во главе со стратигами.</p><div class="m-div"></div><p><strong>Эклога</strong> Льва III (726) — первый законодательный акт на греческом языке, смягчивший наказания под влиянием христианства. <strong>Василики</strong> Льва VI (888–889) — грекоязычная переработка Corpus Juris Civilis в 60 книгах — стали главным правовым источником Византии до 1453 года.</p>`,
+   facts:[{k:'Реформа',v:'Фемная система'},{k:'Эклога',v:'726 н.э.'},{k:'Василики',v:'888–889 н.э.'},{k:'Язык права',v:'Греческий'}]},
+
+  {era:'byzantium',eraL:'Поздняя Византия',date:'1204–1453 н.э.',
+   title:'Закат и падение Константинополя',det:'medium',
+   ex:'Разграбление 1204 г., раздробленность, османская экспансия. 29 мая 1453 г. — конец Византийской империи и тысячелетнего римского правового наследия на Востоке.',
+   full:`<p>В 1204 г. участники IV крестового похода разграбили Константинополь. Byzantium фрагментировалась; в 1261 г. <strong>Михаил VIII Палеолог</strong> восстановил её, но ослабленной.</p><div class="m-div"></div><p>29 мая <strong>1453 н.э.</strong> войска <strong>Мехмеда II</strong> взяли Константинополь. Последний император <strong>Константин XI Палеолог</strong> погиб в бою. Греческие учёные бежали в Италию, ускорив Ренессанс; Corpus Juris Civilis продолжил жизнь в университетах Болоньи, Парижа и Лейпцига.</p>`,
+   facts:[{k:'Разграбление',v:'1204 н.э.'},{k:'Реставрация',v:'1261 н.э.'},{k:'Дата падения',v:'29 мая 1453 н.э.'},{k:'Завоеватель',v:'Мехмед II'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'≈ 800–700 до н.э.',
+   title:'Гомеровская Греция и родовое право',det:'brief',
+   ex:'Эпоха Гомера — от родовой общины к полису. Басилей, геронт, народное собрание. «Илиада» и «Одиссея» как источники обычного права.',
+   full:`<p><strong>Гомеровская Греция</strong> (≈ 800–700 до н.э.) — переходный период от родовой общины к полису. Власть принадлежала <strong>басилею</strong> — военному вождю, совету старейшин (<strong>геронт</strong>) и народному собранию (<strong>агора</strong>).</p><div class="m-div"></div><p>Гомеровские поэмы — первый письменный источник греческого права: долговое рабство, выкуп за убийство (<em>вендетта</em>), брачные обычаи, наследование. <strong>Фемида</strong> — божественная справедливость, <strong>дике</strong> — человеческая. Это фундамент, на котором строились полисные законы.</p>`,
+   facts:[{k:'Период',v:'≈ 800–700 до н.э.'},{k:'Источники',v:'Илиада, Одиссея'},{k:'Власть',v:'Басилей, геронт, агора'},{k:'Право',v:'Родовое, обычное'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'621 до н.э.',
+   title:'Законы Драконта',det:'brief',
+   ex:'Первые писаные законы Афин. Суровость наказаний дала название слову «драконовский». Начало писаного права в Греции.',
+   full:`<p>В 621 до н.э. афинский архонт <strong>Драконт</strong> издал первые писаные законы. До этого право было тайным знанием аристократов и жрецов. Теперь каждый гражданин мог знать свои права и обязанности.</p><div class="m-div"></div><p>Законы Драконта были знамениты <strong>суровостью</strong>: даже за небольшие преступления полагалась смертная казнь. Отсюда происходит слово «драконовский». Но главное — <strong>равенство перед законом</strong> заменило произвол знати. Солон позже заменил большинство законов Драконта, сохранив только уголовные.</p>`,
+   facts:[{k:'Дата',v:'621 до н.э.'},{k:'Автор',v:'Драконт'},{k:'Принцип',v:'Писаный закон'},{k:'Суд',v:'Ареопаг'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'508–507 до н.э.',
+   title:'Реформы Клисфена',det:'brief',
+   ex:'Отмена родовых групп (фил), введение территориальных округов (демов). Искажение — процедура изгнания. Прямое предшествие афинской демократии.',
+   full:`<p>В 508–507 до н.э. <strong>Клисфен</strong> провёл коренную реформу афинского государства. Он <strong>отменил родовые филы</strong> — основу аристократической власти — и разделил Аттику на 10 территориальных округов (<strong>демов</strong>), объединённых в новые филы по принципу территориальности, а не родства.</p><div class="m-div"></div><p>Введена <strong>искажение</strong> (<em>ostrakismos</em>) — процедура народного изгнания опасного для государства политика. Буле расширена до 500 членов (50 от каждой филы). Экклесия — народное собрание — стала высшим органом власти. Афинская демократия достигла своей классической формы.</p>`,
+   facts:[{k:'Дата',v:'508–507 до н.э.'},{k:'Реформатор',v:'Клисфен'},{k:'Нововведение',v:'Территориальные демы'},{k:'Институт',v:'Искажение (ostrakismos)'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'431–404 до н.э.',
+   title:'Пелопоннесская война',det:'brief',
+   ex:'Война Афин и Спарты за гегемонию в Греции. Крушение афинской демократии, тридцать тиранов. Правовой и политический перелом.',
+   full:`<p><strong>Пелопоннесская война</strong> (431–404 до н.э.) — тридцатилетний конфликт между Афинским морским союзом и Пелопоннесским союзом во главе со Спартой. Причины: торговая конкуренция, борьба за гегемонию, идеологическое противостояние демократии и олигархии.</p><div class="m-div"></div><p>Война привела к <strong>крушению афинской демократии</strong>. В 404 до н.э. спартанский полководец Лисандр установил в Афинах олигархию <strong>тридцати тиранов</strong>. Демократия была восстановлена в 403 до н.э., но Афины навсегда утратили гегемонию. Война стала политическим и правовым переломом эпохи классической Греции.</p>`,
+   facts:[{k:'Период',v:'431–404 до н.э.'},{k:'Стороны',v:'Афины vs Спарта'},{k:'Последствие',v:'Тридцать тиранов'},{k:'Итог',v:'Утрата гегемонии Афин'}]},
+
+  {era:'greek',eraL:'Древняя Греция',date:'338 до н.э.',
+   title:'Македонское завоевание',det:'brief',
+   ex:'Филипп II разгромил греческие полисы при Херонее. Александр Великий распространил греческую культуру и право на Восток. Конец полисной автономии.',
+   full:`<p>В 338 до н.э. <strong>Филипп II Македонский</strong> разгромил объединённые греческие полисы при Херонее. Греция вошла в состав Македонского царства. После смерти Филиппа <strong>Александр Великий</strong> (336–323 до н.э.) начал беспрецедентные завоевания: Египет, Персия, Центральная Азия, Индия.</p><div class="m-div"></div><p><strong>Эллинистическая эпоха</strong> ознаменовала распространение греческого языка, культуры и права на восток. Полисы утратили автономию, но сохранили местное самоуправление. Возникли новые полисы — Александрия, Антиохия, Селевкия. Греческое право стало универсальным языком восточного Средиземноморья.</p>`,
+   facts:[{k:'Дата битвы',v:'338 до н.э.'},{k:'Филипп II',v:'Завоевание Греции'},{k:'Александр',v:'336–323 до н.э.'},{k:'Итог',v:'Эллинистическая эпоха'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'451–450 до н.э.',
+   title:'Законы XII таблиц',det:'brief',
+   ex:'Первый кодекс писаного римского права. Десять (позже двенадцать) бронзовых таблиц на Форуме. Право перестало быть тайным знанием жрецов.',
+   full:`<p><strong>Законы XII таблиц</strong> (451–450 до н.э.) — первый писаный свод римского права. Создан комиссией десяти человек (<em>decemviri legibus scribundis</em>) по требованию плебеев. Десять таблиц вывешены на Форуме, позже добавлены ещё две.</p><div class="m-div"></div><p>Кодекс урегулировал уголовное право, процесс, семейные отношения, наследование, собственность, долги. Знаменитая формула: <em>«Если кто-то призывает к суду, тот должен идти»</em>. Право стало <strong>публичным и доступным</strong>, хотя сохранялась жёсткость: долговое рабство, право отца продать сына, вендетта. XII таблиц — фундамент всего римского права.</p>`,
+   facts:[{k:'Дата',v:'451–450 до н.э.'},{k:'Комиссия',v:'Decemviri'},{k:'Принцип',v:'Писаный, публичный закон'},{k:'Содержание',v:'Уголовное, гражданское, процессуальное право'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'133–121 до н.э.',
+   title:'Реформы Гракхов',det:'brief',
+   ex:'Тиберий и Гай Гракхи попытались провести земельные реформы. Противостояние между сенатской олигархией и народными трибунами. Начало республиканского кризиса.',
+   full:`<p><strong>Тиберий Гракх</strong> (трибун 133 до н.э.) предложил раздать землю бедным римлянам, ограничив владения знати. Сенат организовал его убийство. <strong>Гай Гракх</strong> (трибун 123–121 до н.э.) пошёл дальше: реформа провинций, судов, гражданство для союзников. Тоже погиб в столкновении.</p><div class="m-div"></div><p>Реформы Гракхов показали, что <strong>сенатская олигархия не готова к компромиссу</strong>. Началась политическая радикализация: популарии vs оптиматы. Плебеи потеряли веру в мирные реформы. Это был начало конца Римской республики.</p>`,
+   facts:[{k:'Тиберий',v:'133 до н.э.'},{k:'Гай',v:'123–121 до н.э.'},{k:'Реформы',v:'Земельные, судебные, союзные'},{k:'Итог',v:'Убийства обоих братьев'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'82–79 до н.э.',
+   title:'Диктатура Суллы',det:'brief',
+   ex:'Луций Корнелий Сулла стал первым диктатором без срока. Прокрипции — массовые убийства политических противников. Восстановление сенатской власти, но за счёт гражданской войны.',
+   full:`<p>В 82 до н.э. <strong>Луций Корнелий Сулла</strong> одержал победу в гражданской войне и стал диктатором. Он был первым, кто получил <strong>диктатуру без срока</strong> (<em>dictator rei publicae constituendae</em>). Начались <strong>прокрипции</strong> — публичные списки политических врагов, подлежащих немедленной казни.</p><div class="m-div"></div><p>Сулла восстановил власть сената: расширил его до 600 членов, ограничил власть трибунов, ввёл суд присяжных. Но методы — кровь и террор — подорвали авторитет республиканских институтов. В 79 до н.э. Сулла отошёл от власти, оставив политически расколотое государство.</p>`,
+   facts:[{k:'Диктатура',v:'82–79 до н.э.'},{k:'Метод',v:'Прокрипции'},{k:'Реформы',v:'Расширение сената, ограничение трибуната'},{k:'Итог',v:'Предшествие Цезарю'}]},
+
+  {era:'republic',eraL:'Римская республика',date:'48–44 до н.э.',
+   title:'Юлий Цезарь и реформы',det:'brief',
+   ex:'Победа в гражданской войне, диктатура, реформы календаря, провинций, гражданства. Убийство 15 марта 44 до н.э. — конец старой республики.',
+   full:`<p><strong>Гай Юлий Цезарь</strong> (100–44 до н.э.) начал гражданскую войну против Помпея и сенатской оппозиции, победил при Фарсале (48 до н.э.) и стал пожизненным диктатором. Реформы: <strong>Юлианский календарь</strong>, реорганизация провинций, расширение сената, колонизация, привилегии для вольноотпущенников.</p><div class="m-div"></div><p>15 марта 44 до н.э. (<em>Idus Martiae</em>) Цезарь был убит заговорщиками во главе с Брутом и Кассием. Его смерть показала, что <strong>республиканские институты невозможно восстановить</strong> силой. Началась новая гражданская война, завершившаяся принципатом Августа.</p>`,
+   facts:[{k:'Диктатура',v:'48–44 до н.э.'},{k:'Реформы',v:'Календарь, провинции, сенат'},{k:'Убийство',v:'15 марта 44 до н.э.'},{k:'Итог',v:'Предшествие принципату'}]},
+
+  {era:'principat',eraL:'Принципат',date:'27 до н.э. – 68 н.э.',
+   title:'Династия Юлиев-Клавдиев',det:'brief',
+   ex:'Первые императоры Рима: Август, Тиберий, Калигула, Клавдий, Нерон. Установление и первые испытания принципата. Нерон — последний представитель династии.',
+   full:`<p><strong>Династия Юлиев-Клавдиев</strong> (27 до н.э. – 68 н.э.) — первые пять императоров Рима. <strong>Август</strong> заложил основы принципата. <strong>Тиберий</strong> (14–37) укрепил бюрократию, но его правление омрачено интригами. <strong>Калигула</strong> (37–41) — пример тирании. <strong>Клавдий</strong> (41–54) расширил империю, включил галльских аристократов в сенат. <strong>Нерон</strong> (54–68) погубил династию.</p><div class="m-div"></div><p>Династия показала, что принципат уязвим: наследственная передача власти порождала неадекватных правителей. После смерти Нерона началась «год четырёх императоров» (69 н.э.) — война легионов за трон.</p>`,
+   facts:[{k:'Период',v:'27 до н.э. – 68 н.э.'},{k:'Императоры',v:'5 (Август–Нерон)'},{k:'Кризис',v:'Год четырёх императоров, 69'},{k:'Урок',v:'Уязвимость наследственности'}]},
+
+  {era:'principat',eraL:'Принципат',date:'69–96 н.э.',
+   title:'Династия Флавиев',det:'brief',
+   ex:'Веспасиан, Тит, Домициан. Восстановление после гражданских войн. Строительство Колизея, военные кампании. Домициан — последний Флавий, убитый заговорщиками.',
+   full:`<p><strong>Династия Флавиев</strong> (69–96 н.э.) пришла к власти после «года четырёх императоров». <strong>Веспасиан</strong> (69–79) — прагматичный правитель, восстановил финансы, построил <strong>Колизей</strong>. <strong>Тит</strong> (79–81) — кратковременное, но славное правление. <strong>Домициан</strong> (81–96) укрепил императорскую власть, но его тирания привела к убийству.</p><div class="m-div"></div><p>Флавии укрепили принципат как устойчивую форму правления. Но проблема наследственности оставалась: Домициан был убит, а династия пресеклась. Сенат объявил <em>damnatio memoriae</em> — проклятие памяти.</p>`,
+   facts:[{k:'Период',v:'69–96 н.э.'},{k:'Основатель',v:'Веспасиан'},{k:'Строительство',v:'Колизей, 80 н.э.'},{k:'Итог',v:'Damnatio memoriae Домициана'}]},
+
+  {era:'principat',eraL:'Принципат',date:'101–106 н.э.',
+   title:'Варварские войны и Траян',det:'brief',
+   ex:'Траян раздвинул границы империи до максимума: Дакия, Парфия, Армения. Колонна Траяна — памятник завоеваниям. Апогей территориального расширения Рима.',
+   full:`<p><strong>Траян</strong> (98–117 н.э.) — первый император не из Италии (родом из Испании). Он вёл <strong>два дакийских похода</strong> (101–102, 105–106), присоединив богатую Дакию с её золотыми рудниками. Затем — <strong>парфянская кампания</strong> (113–117), которая довела границы империи до Персидского залива.</p><div class="m-div"></div><p><strong>Колонна Траяна</strong> (113 н.э.) — спиральный барельеф, рассказывающий о дакийских войнах. Это не просто памятник: это <strong>пропаганда императорской власти</strong>. Империя достигла максимального территориального расширения — но удержать его оказалось невозможно.</p>`,
+   facts:[{k:'Период',v:'101–117 н.э.'},{k:'Завоевания',v:'Дакия, Парфия, Армения'},{k:'Колонна',v:'113 н.э., Рим'},{k:'Рекорд',v:'Максимальное расширение империи'}]},
+
+  {era:'principat',eraL:'Принципат',date:'193–235 н.э.',
+   title:'Северанская династия',det:'brief',
+   ex:'Септимий Север, Каракалла, Элагабал. Военизация империи, конституция Антонина — расширение гражданства. Последняя стабильная династия перед кризисом.',
+   full:`<p><strong>Северанская династия</strong> (193–235 н.э.) началась с победы Септимия Севера в гражданской войне. Он первым открыто заявил: <em>«Не обращай внимания на прочее — обогащай солдат и держи всё остальное в безразличии»</em>. Армия стала главной опорой власти.</p><div class="m-div"></div><p><strong>Каракалла</strong> (211–217) издал <strong>конституцию Антонина</strong> (212 н.э.), даровавшую римское гражданство всем свободным жителям империи. Это унифицировало правовое пространство, но размылило ценность гражданства. <strong>Элагабал</strong> (218–222) — эксцентричный жрец-солнце, убитый преторианцами. Династия пала с убийством Александра Севера (235).</p>`,
+   facts:[{k:'Период',v:'193–235 н.э.'},{k:'Конституция',v:'212 н.э. — гражданство всем'},{k:'Принцип',v:'Армия = власть'},{k:'Конец',v:'235 н.э., убийство Александра Севера'}]},
+
+  {era:'crisis',eraL:'Кризис III века',date:'260–274 н.э.',
+   title:'Галльская империя',det:'brief',
+   ex:'Постум создал независимое государство в Галлии, Британии и Испании. Сепаратизм как ответ на центральный коллапс. Восстановление единства при Аурелиане.',
+   full:`<p>В 260 н.э. римский военачальник <strong>Постум</strong> провозгласил себя императором в Галлии. <strong>Галльская империя</strong> охватила Галлию, Британию, Испанию и часть Германии. Это был не бунт, а <strong>прагматический ответ на коллапс центральной власти</strong>: границы нужно было защищать, а Рим не мог.</p><div class="m-div"></div><p>Галльская империя просуществовала 14 лет, сменив трёх императоров. В 274 н.э. <strong>Аурелиан</strong> разгромил последнего галльского императора Тетрика и восстановил единство империи. Эпизод показал, что без центральной власти провинции не могли выжить в одиночку.</p>`,
+   facts:[{k:'Период',v:'260–274 н.э.'},{k:'Основатель',v:'Постум'},{k:'Территория',v:'Галлия, Британия, Испания'},{k:'Восстановление',v:'Аурелиан, 274 н.э.'}]},
+
+  {era:'crisis',eraL:'Кризис III века',date:'267–272 н.э.',
+   title:'Пальмирское царство',det:'brief',
+   ex:'Королева Зенобия создала мощное государство на Востоке. Пальмира — торговый хаб между Римом и Персией. Поражение от Аурелиана и возвращение Востока.',
+   full:`<p><strong>Пальмира</strong> — богатый торговый город в Сирии, соединявший Рим и Персию. После убийства мужа <strong>Одената</strong> (267) его вдова <strong>Зенобия</strong> провозгласила себя правительницей, а затем и царицей. Она расширила владения до Египта и Малой Азии, создав <strong>мощное государство на Востоке</strong>.</p><div class="m-div"></div><p>Зенобия провозгласила своего сына Вабаллата императором — прямой вызов Риму. В 272 н.э. <strong>Аурелиан</strong> разгромил Пальмиру, взял Зенобию в плен и привёл её в Рим. Пальмирское царство исчезло, но осталось символом восточного сепаратизма.</p>`,
+   facts:[{k:'Период',v:'267–272 н.э.'},{k:'Правительница',v:'Зенобия'},{k:'Территория',v:'Сирия, Египет, Малая Азия'},{k:'Конец',v:'Аурелиан, 272 н.э.'}]},
+
+  {era:'crisis',eraL:'Кризис III века',date:'270–275 н.э.',
+   title:'Аурелиан и восстановление единства',det:'brief',
+   ex:'Аурелиан разгромил Пальмиру и Галльскую империю, укрепил стены Рима. Восстановление единства, но при цене усиления доминатных тенденций.',
+   full:`<p><strong>Аурелиан</strong> (270–275 н.э.) — «реставратор империи» (<em>Restitutor Orbis</em>). За пять лет он разгромил <strong>Галльскую империю</strong> (274) и <strong>Пальмирское царство</strong> (272), восстановив территориальное единство. Укрепил <strong>стены Рима</strong> — первые городские стены с III в. до н.э.</p><div class="m-div"></div><p>Аурелиан также реформировал монету, создав <strong>аурилианус</strong> — стабильную серебряную монету. Но его методы — прямая военная сила — показали, что сенат и республиканские формы уступили место военной диктатуре. Его убийство (275) не остановило тенденцию: следующий — Диоклетиан — окончательно установит доминат.</p>`,
+   facts:[{k:'Правление',v:'270–275 н.э.'},{k:'Титул',v:'Restitutor Orbis'},{k:'Восстановление',v:'Галлия, Пальмира'},{k:'Стены Рима',v:'270–275 н.э.'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'306–312 н.э.',
+   title:'Гражданская война за власть',det:'brief',
+   ex:'Константин против Максенция и Лициния. Битва у Мульвийского моста (312) — поворотный момент. Христианский символ на щитах и победа.',
+   full:`<p>После отречения Диоклетиана и Максимиана (305) началась <strong>гражданская война за власть</strong>. Константин, сын Констанция Хлора, боролся с Максенцием (сын Максимиана) в Италии и с Лицинием на Востоке. В 312 н.э. произошла <strong>битва у Мульвийского моста</strong> — решающая для судьбы Рима.</p><div class="m-div"></div><p>По легенде, Константин увидел <strong>христианский символ (хи-ро)</strong> на небе со словами: <em>«Сим победиши»</em>. Он приказал вычертить знак на щитах и одержал победу. В 313 н.э. <strong>Миланский эдикт</strong> легализовал христианство. В 324 н.э. Константин победил Лициния и стал единовластным императором.</p>`,
+   facts:[{k:'Битва',v:'Мульвийский мост, 312'},{k:'Символ',v:'Хи-ро (☧)'},{k:'Эдикт',v:'313 н.э.'},{k:'Единовластие',v:'324 н.э.'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'330 н.э.',
+   title:'Перенос столицы в Константинополь',det:'brief',
+   ex:'11 мая 330 н.э. — освящение «Нового Рима» на Босфоре. Столица империи переместилась на Восток. Константинополь как центр восточного христианского мира.',
+   full:`<p>11 мая <strong>330 н.э.</strong> Константин торжественно освятил <strong>Константинополь</strong> — «Новый Рим» на берегу Босфора. Город был построен на месте византийского поселения, в стратегически идеальной точке: между Европой и Азией, между Средиземным и Чёрным морями.</p><div class="m-div"></div><p>Константинополь получил привилегии старого Рима: <strong>солодовый пай</strong>, <strong>цирковые игры</strong>, <strong>сенат</strong>. Но главное — он стал <strong>центром восточного христианского мира</strong>. Византийская империя, рожденная в этот день, переживёт Западную Римскую империю на почти тысячу лет.</p>`,
+   facts:[{k:'Дата',v:'11 мая 330 н.э.'},{k:'Название',v:'Новый Рим'},{k:'Локация',v:'Босфор, византий'},{k:'Итог',v:'Центр восточного мира'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'375–395 н.э.',
+   title:'Варварские нашествия',det:'brief',
+   ex:'Гуннское нашествие вытеснило германские племёна. Битва при Адрианополе (378) — первое поражение римлян от варваров. Варвары становятся федератами.',
+   full:`<p>В 375 н.э. <strong>гунны</strong> вторглись в Европу, вытеснив германские племена (визиготов, готов) на территорию Римской империи. 9 августа <strong>378 н.э.</strong> при Адрианополе римская армия потерпела <strong>катастрофическое поражение</strong> от визиготов — император Валенс погиб. Это был первый случай, когда варвары разгромили крупную римскую армию.</p><div class="m-div"></div><p>В 382 н.э. Феодосий I заключил договор с визиготами, позволив им поселиться в империи как <strong>федераты</strong> — союзники. Это начало <strong>варваризации армии и государства</strong>. Варварские военачальники (Стилихон, Аэций) стали реальными правителями Запада. Германские племена стали не врагами, а участниками империи.</p>`,
+   facts:[{k:'Гунны',v:'375 н.э.'},{k:'Адрианополь',v:'378 н.э., гибель Валенса'},{k:'Федераты',v:'382 н.э.'},{k:'Итог',v:'Варваризация армии'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'438 н.э.',
+   title:'Феодосиев кодекс',det:'brief',
+   ex:'Первая официальная кодификация римского права. Систематизация конституций от Константина до Феодосия II. Обязательна для Запада и Востока.',
+   full:`<p><strong>Кодекс Феодосия II</strong> (438 н.э.) — первая <strong>официальная кодификация</strong> римского права, обязательная для обеих частей империи. Составлен комиссией под руководством Антиоха — 16 книг, систематизирующих конституции императоров от Константина до Феодосия II.</p><div class="m-div"></div><p>Кодекс стал прообразом кодификации Юстиниана. Он повлиял на <strong>«варварские правды»</strong> — законодательство варварских королевств (Бургунды, Вестготы). Феодосиев кодекс показал, что даже в эпоху упадка римское право сохраняло системность и авторитет.</p>`,
+   facts:[{k:'Дата',v:'438 н.э.'},{k:'Автор',v:'Комиссия Антиоха'},{k:'Содержание',v:'16 книг, конституции'},{k:'Влияние',v:'Варварские правды'}]},
+
+  {era:'dominat',eraL:'Доминат',date:'395–408 н.э.',
+   title:'Стилихон и оборона Запада',det:'brief',
+   ex:'Варварский военачальник — фактический правитель Запада. Оборона Италии, борьба с визиготами. Казнён по интригам двора. Символ варваризации власти.',
+   full:`<p><strong>Стилихон</strong> (≈ 365–408 н.э.) — варвар (син скотийской и вандальской крови), ставший <strong>военным магистром Запада</strong> и фактическим правителем при малолетнем Гонории. Он отразил нашествие визиготов Алариха в 397 и 402 н.э., защитил Италию.</p><div class="m-div"></div><p>Стилихон погиб от интриг императорского двора: его обвинили в измене и казнили (408). После его смерти Запад остался без защиты. В 410 н.э. визиготы Алариха <strong>разграбили Рим</strong> — первое варварское разграбление столицы за 800 лет. Стилихон — символ эпохи, когда варвары были опорой и гибелью империи.</p>`,
+   facts:[{k:'Период',v:'395–408 н.э.'},{k:'Происхождение',v:'Вандал/скот'},{k:'Защита',v:'Италия от визиготов'},{k:'Гибель',v:'Казнь 408, разграбление Рима 410'}]},
+
+  {era:'byzantium',eraL:'Ранняя Византия',date:'726–843 н.э.',
+   title:'Иконоборчество и право',det:'brief',
+   ex:'Лев III запретил иконопочитание. Борьба между императором и церковью за верховенство. Иконоборчество как инструмент государственной власти.',
+   full:`<p>В 726 н.э. император <strong>Лев III Исавр</strong> издал <strong>эдикт против иконопочитания</strong>, начав эпоху <strong>иконоборчества</strong> (726–843). Иконоборцы считали иконы идолопоклонством. Папа Римский и монашество выступили против. В 787 н.э. <strong>Никейский собор</strong> временно восстановил иконопочитание, но Лев V снова запретил иконы в 815 н.э.</p><div class="m-div"></div><p>Иконоборчество было не только религиозным, но и <strong>политическим конфликтом</strong>: император пытался подчинить церковь, а церковь отстаивала автономию. В 843 н.э. императрица <strong>Феодора</strong> окончательно восстановила иконопочитание. Правовой итог: государство не смогло подчинить церковь полностью.</p>`,
+   facts:[{k:'Начало',v:'726 н.э., Лев III'},{k:'Собор',v:'787 н.э. (Никея), 843 н.э.'},{k:'Итог',v:'Восстановление икон'},{k:'Политика',v:'Император vs Церковь'}]},
+
+  {era:'byzantium',eraL:'Ранняя Византия',date:'VII–VIII вв.',
+   title:'Фемная система и Эклога',det:'brief',
+   ex:'Военно-административные округа (фемы) со стратигами. Эклога Льва III — первый закон на греческом языке. Смягчение наказаний под влиянием христианства.',
+   full:`<p>В VII в. Византия реорганизовала провинции в <strong>фемы</strong> — военно-административные округа во главе со <strong>стратигами</strong>. Фемы объединяли гражданское управление и военное командование. Это было ответом на арабские и славянские угрозы.</p><div class="m-div"></div><p><strong>Эклога</strong> Льва III (726) — первый законодательный акт на греческом языке. Она смягчила наказания по сравнению с римским правом: ограничена смертная казнь, введены штрафы и телесные наказания вместо смерти. Влияние христианской этики на право. Эклога стала основой византийского законодательства до Василик.</p>`,
+   facts:[{k:'Реформа',v:'Фемная система, VII в.'},{k:'Эклога',v:'726 н.э.'},{k:'Язык',v:'Греческий'},{k:'Изменения',v:'Смягчение наказаний'}]},
+
+  {era:'byzantium',eraL:'Средняя Византия',date:'888–889 н.э.',
+   title:'Василики Льва VI',det:'brief',
+   ex:'Грекоязычная переработка Corpus Juris Civilis в 60 книгах. Главный правовой источник Византии до 1453 года. Соединение римского права и византийской практики.',
+   full:`<p><strong>Василики</strong> (греч. «царские») — кодекс императора <strong>Льва VI Мудрого</strong> (888–889 н.э.). Это грекоязычная переработка <em>Corpus Juris Civilis</em> в 60 книгах, адаптированная к византийской реальности. Василики объединили римское право, новеллы Юстиниана и последующих императоров, византийские обычаи.</p><div class="m-div"></div><p>Василики стали <strong>главным правовым источником Византии</strong> до 1453 года. Они повлияли на право балканских славян, румын, грузин, армян. Василики — мост между классическим римским правом и восточно-европейским правовым наследием.</p>`,
+   facts:[{k:'Дата',v:'888–889 н.э.'},{k:'Автор',v:'Лев VI Мудрый'},{k:'Содержание',v:'60 книг, Corpus Juris Civilis'},{k:'Влияние',v:'Византия, Балканы, Кавказ'}]},
+
+  {era:'byzantium',eraL:'Средняя Византия',date:'867–1056 н.э.',
+   title:'Македонская династия',det:'brief',
+   ex:'Василий II Болгаробойца, золотой век Византии. Законодательство, административные реформы. Византия — мировая держава.',
+   full:`<p><strong>Македонская династия</strong> (867–1056 н.э.) — расцвет Византийской империи. <strong>Василий I</strong> (867–886) — основатель, грамотный администратор. <strong>Лев VI Мудрый</strong> (886–912) — законодатель. <strong>Константин VII Багрянородный</strong> (913–959) — просвещённый император, автор «О церемониях».</p><div class="m-div"></div><p><strong>Василий II Болгаробойца</strong> (976–1025) — вершина династии. Он разгромил Болгарию, расширил владения до Кавказа, реформировал налоговую систему. При нём Византия стала <strong>сильнейшей державой Средиземноморья</strong>. Династия пресеклась смертью Феодоры (1056), и начался период кризиса, завершившийся разграблением 1204 года.</p>`,
+   facts:[{k:'Период',v:'867–1056 н.э.'},{k:'Вершина',v:'Василий II, 976–1025'},{k:'Реформы',v:'Законодательство, налоги, администрация'},{k:'Итог',v:'Золотой век Византии'}]}
+];
+
+// IMAGE MAP
+const EV_IMGS = {
+  "Троянская война": { src: "./assets/images/troy.jpg", alt: "Археологический памятник Трои" },
+  "Полисная демократия и законодательство": { src: "./assets/images/solon.jpg", alt: "Бюст Солона" },
+  "Основание Республики": { src: "./assets/images/she-wolf.jpg", alt: "Капитолийская волчица" },
+  "Расцвет и кризис Республики": { src: "./assets/images/republic-crisis.jpg", alt: "Поздняя Римская республика" },
+  "Установление принципата. Август": { src: "./assets/images/augustus.jpg", alt: "Август Прима-Порта" },
+  "Государственный строй принципата": { src: "./assets/images/principate.jpg", alt: "Императорский Рим эпохи принципата" },
+  "Классическая юриспруденция": { src: "./assets/images/papinian.jpg", alt: "Папиниан" },
+  "Эпоха пяти хороших императоров": { src: "./assets/images/marcus-aurelius.jpg", alt: "Марк Аврелий" },
+  "Кризис III века: солдатские императоры": { src: "./assets/images/crisis-iii.jpg", alt: "Кризис III века" },
+  "Установление домината. Диоклетиан": { src: "./assets/images/diocletian.jpg", alt: "Дворец Диоклетиана" },
+  "Константин Великий. Христианство и право": { src: "./assets/images/constantine.jpg", alt: "Константин Великий" },
+  "Право домината: кодификации": { src: "./assets/images/theodosius.jpg", alt: "Феодосий II" },
+  "Раздел империи: Запад и Восток": { src: "./assets/images/empire-395.png", alt: "Карта Римской империи в 395 году" },
+  "Падение Западной Римской империи": { src: "./assets/images/romulus-augustulus.jpg", alt: "Ромул Августул" },
+  "Юстиниан I и Corpus Juris Civilis": { src: "./assets/images/justinian.jpg", alt: "Юстиниан I" },
+  "Средневизантийский период": { src: "./assets/images/hagia-sophia.jpg", alt: "Святая София" },
+  "Закат и падение Константинополя": { src: "./assets/images/theodosian-walls.jpg", alt: "Феодосиевы стены Константинополя" },
+  "Гомеровская Греция и родовое право": { src: "./assets/images/homer.jpg", alt: "Гомеровская Греция" },
+  "Законы Драконта": { src: "./assets/images/draco.jpg", alt: "Драконт" },
+  "Реформы Клисфена": { src: "./assets/images/cleisthenes.jpg", alt: "Клисфен" },
+  "Пелопоннесская война": { src: "./assets/images/peloponnesian.jpg", alt: "Пелопоннесская война" },
+  "Македонское завоевание": { src: "./assets/images/macedonia.jpg", alt: "Македонское царство" },
+  "Законы XII таблиц": { src: "./assets/images/twelve-tables.jpg", alt: "Законы XII таблиц" },
+  "Реформы Гракхов": { src: "./assets/images/gracchi.jpg", alt: "Братья Гракхи" },
+  "Диктатура Суллы": { src: "./assets/images/sulla.jpg", alt: "Сулла" },
+  "Юлий Цезарь и реформы": { src: "./assets/images/caesar.jpg", alt: "Юлий Цезарь" },
+  "Династия Юлиев-Клавдиев": { src: "./assets/images/julio-claudian.jpg", alt: "Династия Юлиев-Клавдиев" },
+  "Династия Флавиев": { src: "./assets/images/flavian.jpg", alt: "Династия Флавиев" },
+  "Варварские войны и Траян": { src: "./assets/images/trajan.jpg", alt: "Траян и Колонна" },
+  "Северанская династия": { src: "./assets/images/severan.jpg", alt: "Северанская династия" },
+  "Галльская империя": { src: "./assets/images/gallic-empire.jpg", alt: "Галльская империя" },
+  "Пальмирское царство": { src: "./assets/images/palmyra.jpg", alt: "Пальмира и Зенобия" },
+  "Аурелиан и восстановление единства": { src: "./assets/images/aurelian.jpg", alt: "Аурелиан" },
+  "Гражданская война за власть": { src: "./assets/images/milvian-bridge.jpg", alt: "Битва у Мульвийского моста" },
+  "Перенос столицы в Константинополь": { src: "./assets/images/constantinople.jpg", alt: "Константинополь" },
+  "Варварские нашествия": { src: "./assets/images/adrianople.jpg", alt: "Битва при Адрианополе" },
+  "Феодосиев кодекс": { src: "./assets/images/codex-theodosianus.jpg", alt: "Феодосиев кодекс" },
+  "Стилихон и оборона Запада": { src: "./assets/images/stilicho.jpg", alt: "Стилихон" },
+  "Иконоборчество и право": { src: "./assets/images/iconoclasm.jpg", alt: "Иконоборчество" },
+  "Фемная система и Эклога": { src: "./assets/images/ecloga.jpg", alt: "Фемная система и Эклога" },
+  "Василики Льва VI": { src: "./assets/images/basilika.jpg", alt: "Василики Льва VI" },
+  "Македонская династия": { src: "./assets/images/macedonian.jpg", alt: "Македонская династия" }
+};
+const ERA_ORDER = ['greek','republic','principat','crisis','dominat','byzantium'];
+const ERA_LBL = {greek:'Древняя Греция',republic:'Римская республика',
+  principat:'Принципат',crisis:'Кризис III века',
+  dominat:'Доминат',byzantium:'Византия'};
+
+function setImage(el,title){
+  const item = EV_IMGS[title];
+  if(!item || !item.src){
+    el.innerHTML = '<div class="tl-img-fallback">Историческое изображение подбирается</div>';
+    return;
+  }
+    const img = document.createElement('img');
+  img.alt = item.alt || title;
+ img.style.cssText = 'width:100%;height:100%;object-fit:contain;border-radius:inherit;display:block';
+  img.onerror = () => { el.innerHTML = '<div class="tl-img-fallback">Изображение недоступно</div>'; };
+  img.src = item.src;
+  el.innerHTML = '';
+  el.appendChild(img);
+}
+
+function buildTL(filter){
+  const wrap = document.getElementById('tlw');
+  wrap.innerHTML = '';
+  const eras = filter === 'all' ? ERA_ORDER : [filter];
+  let globalIdx = 0;
+
+  eras.forEach(era => {
+    const items = EV.filter(e => e.era === era);
+    if(!items.length) return;
+    const grp = document.createElement('div');
+    grp.className = 'era-grp';
+    grp.dataset.era = era;
+    grp.innerHTML = `<div class="era-hdr" aria-hidden="true">
+      <div class="era-hdr-ln"></div>
+      <span class="era-hdr-lb">${ERA_LBL[era]}</span>
+      <div class="era-hdr-ln"></div></div>
+      <div class="tl-list" role="list"></div>`;
+    const list = grp.querySelector('.tl-list');
+
+    items.forEach(ev => {
+      const side = globalIdx % 2 === 0 ? 'L' : 'R';
+      const isFull = ev.det === 'full' || ev.det === 'medium';
+      const evIdx = EV.indexOf(ev);
+      const item = document.createElement('div');
+      item.className = 'tl-item';
+      item.dataset.era = ev.era;
+      item.dataset.side = side;
+      item.dataset.idx = evIdx;
+      item.setAttribute('role','listitem');
+      item.innerHTML = `
+        <div class="tl-card${isFull?' full':''}" tabindex="0"
+             role="button" aria-label="Открыть: ${ev.title}">
+          <p class="tl-dt">${ev.date}</p>
+          <h3 class="tl-tt">${ev.title}</h3>
+          <p class="tl-ex">${ev.ex}</p>
+          <div class="tl-ft">
+                  <div class="tl-img" data-ev-idx="${evIdx}">
+          </div>
+          
+            <span class="tl-badge${isFull?' bf':''}">${
+              ev.det==='full'?'Подробно':ev.det==='medium'?'Подробнее':'Обзор'
+            }</span>
+            <span class="tl-more" aria-hidden="true">Читать →</span>
+          </div>
+        </div>
+        <div class="tl-node-wrap" aria-hidden="true">
+          <div class="tl-dot"></div>
+        </div>
+        <div class="tl-void" aria-hidden="true"></div>`;
+      list.appendChild(item); const imgBox=item.querySelector('.tl-img'); if(imgBox) setImage(imgBox,ev.title);
+      globalIdx++;
+    });
+    wrap.appendChild(grp);
+  });
+
+  // Attach click handlers
+  document.querySelectorAll('.tl-card').forEach(card => {
+    const open = () => openModal(+card.closest('.tl-item').dataset.idx);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', e => {
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}
+    });
+  });
+
+  // Scroll reveal — threshold=0 so fires as soon as 1px visible
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'none';
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold: 0, rootMargin:'0px 0px -40px 0px'});
+
+  document.querySelectorAll('.tl-item').forEach((el,i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = `opacity .5s ease ${i*0.04}s, transform .5s cubic-bezier(.16,1,.3,1) ${i*0.04}s`;
+    io.observe(el);
+  });
+}
+
+// MODAL
+function openModal(idx){
+  const ev = EV[idx];
+  document.getElementById('mera').textContent = ev.eraL;
+  document.getElementById('mdate').textContent = ev.date;
+  document.getElementById('mtit').textContent = ev.title;
+  document.getElementById('mtxt').innerHTML = ev.full;
+  const fi = document.getElementById('mfacts');
+  if(ev.facts&&ev.facts.length){
+    fi.innerHTML = ev.facts.map(f=>
+      `<div class="m-fact"><div class="m-fk">${f.k}</div><div class="m-fv">${f.v}</div></div>`
+    ).join('');
+    fi.style.display='';
+  } else { fi.style.display='none'; }
+  const ov = document.getElementById('modal');
+  ov.classList.add('on');
+  ov.querySelector('.m-box').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+  document.getElementById('mcls').focus();
+}
+function closeModal(){
+  document.getElementById('modal').classList.remove('on');
+  document.body.style.overflow = '';
+}
+document.getElementById('mcls').addEventListener('click', closeModal);
+document.getElementById('modal').addEventListener('click', e=>{
+  if(e.target===e.currentTarget) closeModal();
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ERA FILTER
+document.querySelectorAll('.era-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.era-btn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    buildTL(btn.dataset.era);
+  });
+});
+
+// THEME
+(function(){
+  const html=document.documentElement;
+  const btn=document.getElementById('thbtn');
+  const ico=document.getElementById('thico');
+  let dark=true;
+  function set(d){
+    dark=d;
+    html.setAttribute('data-theme',d?'dark':'light');
+    btn.setAttribute('aria-label',d?'Светлая тема':'Тёмная тема');
+    ico.innerHTML=d
+      ?'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+      :'<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+  }
+  btn.addEventListener('click',()=>set(!dark));
+  set(true);
+})();
+
+// INIT
+buildTL('all');
+
+// FULLSCREEN TOGGLE
+function updateFsIcon(isFs){
+  const ico = document.getElementById('fsico');
+  const btn = document.getElementById('fsbtn');
+  if(isFs){
+    ico.innerHTML='<path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/>';
+    btn.setAttribute('title','Выйти из полноэкранного режима');
+    btn.setAttribute('aria-label','Выйти из полноэкранного режима');
+  } else {
+    ico.innerHTML='<path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>';
+    btn.setAttribute('title','Полноэкранный режим');
+    btn.setAttribute('aria-label','Полноэкранный режим');
+  }
+}
+document.getElementById('fsbtn').addEventListener('click', function(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+    document.body.classList.add('fullscreen');
+    updateFsIcon(true);
+  } else {
+    document.exitFullscreen();
+  }
+});
+document.addEventListener('fullscreenchange', function(){
+  if(!document.fullscreenElement){
+    document.body.classList.remove('fullscreen');
+    updateFsIcon(false);
+  }
+});
+
+// Horizontal scroll mode removed
+</script>
+</body>
+</html>
